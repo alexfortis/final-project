@@ -419,19 +419,22 @@ public class GUIMachine extends Observable {
                 in.execute(arg, immediate, indirect);
             }
         } catch(CodeAccessException e) {
-            JOptionPane.showMessageDialog(
+            if(running)
+            	JOptionPane.showMessageDialog(
                     frame,
                     "Code Access Exception for program counter " + pc,
                     "Warning",
                     JOptionPane.WARNING_MESSAGE);
+            System.exit(0);
 
         } catch(DataAccessException e) {
-            JOptionPane.showMessageDialog(
+        	if(running)
+        		JOptionPane.showMessageDialog(
                     frame,
                     "Data Access Exception for argument " + arg,
                     "Warning",
                     JOptionPane.WARNING_MESSAGE);
-
+            System.exit(0);
         }
         setChanged();
         notifyObservers();
