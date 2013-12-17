@@ -208,11 +208,9 @@ public class Memory {
 		public void setCode(int opcode, int arg) {
 			this.opcode = opcode;
 			this.arg = arg;
-			System.out.println(opcode);
 			Instruction in = machine.INSTRUCTION_SET[opcode / 4];
 			boolean immediate = opcode % 2 == 1;
 			boolean indirect = (opcode / 2) % 2 == 1;
-			System.out.println(in);
 			String inString = in.toString();
 			if (immediate)
 				inString += "#";

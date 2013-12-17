@@ -5,56 +5,51 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Loader {
-	static public void load(Memory m, File f) throws IOException {
+	static public void load(Memory m, File f) throws IOException,
+			CodeAccessException, DataAccessException {
 		Scanner file = new Scanner(f);
 		int index = 0;
-		boolean inData=false;
+		boolean inData = false;
 		while (file.hasNextLine()) {
 			String line = file.nextLine();
-			
-			if (line.equals("11111111111111111111111111111111")) inData=true;
-			
+
+			if (line.equals("11111111111111111111111111111111")) {
+				inData = true;
+				if (file.hasNextLine())
+					line = file.nextLine();
+			}
 			if (!inData) {
 				long arg = 0;
-				System.out.println(line);
-				// set code
 				long opcode = Long.parseLong(line, 2);
-				if (!Assembler.noArgument.contains(Long.toHexString(opcode))) {
+				String o = null;
+				o = Assembler.first(Assembler.opcode, (int) opcode / 4);
+				System.out.print("Opcode: " + opcode + " Instruction : " + o
+						+ "    ");
+				if (!Assembler.noArgument.contains(o)) {
 					String dline = file.nextLine();
-					if (dline.charAt(0)=='0') {
+					if (!(dline.charAt(0) == '1' && dline.length() == 32)) {
 						arg = Long.parseLong(dline, 2);
-					}
-					else {
+					} else {
 						StringBuilder str = new StringBuilder();
-						for(int i = 0; i<dline.length(); i++) {
-							if (dline.charAt(i) == '0') str.append('1');
-							else str.append('0');
+						for (int i = 0; i < dline.length(); i++) {
+							if (dline.charAt(i) == '0')
+								str.append('1');
+							else
+								str.append('0');
 						}
 						arg = Long.parseLong(str.toString(), 2) + 1;
-						arg*=-1;
-						System.out.println(arg);
+						arg *= -1;
 					}
-				}				
-				try {
-					//System.out.println(index + " " + opcode + " " + arg);
-					m.setCode(index, (int)opcode, (int)arg);
-				} catch (CodeAccessException e) {
-					System.out.println("ERROR: Cannot access code location "
-							+ index);
 				}
-				
+				m.setCode(index, (int) opcode, (int) arg);
 			} else {
-				if (file.hasNextLine()) {
-					int address = Integer.parseInt(file.nextLine(), 2);
+				int address = Integer.parseInt(line, 2);
+				if (file.hasNextInt()) {
+					System.out.println(address);
 					int value = Integer.parseInt(file.nextLine(), 2);
-					try {
-						m.setData(address, value);
-					} catch (DataAccessException e) {
-						System.out.println("ERROR: Cannot access data location "
-								+ address);
-					}
+					m.setData(address, value);
 				}
-				
+
 			}
 			index++;
 		}
