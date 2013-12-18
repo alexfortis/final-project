@@ -452,9 +452,12 @@ public class GUIMachine extends Observable {
 		} catch (CodeAccessException e) {
 			halt();
 			running = false;
-			JOptionPane.showMessageDialog(frame,
-					"Code Access Exception for program counter " + pc,
-					"Warning", JOptionPane.WARNING_MESSAGE);
+			if(pc < 256) {
+				JOptionPane.showMessageDialog(frame,
+						"Code Access Exception for program counter " + pc,
+						"Warning", JOptionPane.WARNING_MESSAGE);
+			}
+					
 
 		} catch (DivideByZeroException e) {
 			halt();

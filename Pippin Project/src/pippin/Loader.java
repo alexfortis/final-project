@@ -23,7 +23,7 @@ public class Loader {
 				long opcode = Long.parseLong(line, 2);
 				String o = null;
 				o = Assembler.first(Assembler.opcode, (int) opcode / 4);
-				System.out.print("Opcode: " + opcode + " Instruction : " + o
+				System.out.println("Opcode: " + opcode + " Instruction : " + o
 						+ "    ");
 				if (!Assembler.noArgument.contains(o)) {
 					String dline = file.nextLine();
@@ -43,11 +43,16 @@ public class Loader {
 				}
 				m.setCode(index, (int) opcode, (int) arg);
 			} else {
-				int address = Integer.parseInt(line, 2);
+				long address = Long.parseLong(line, 2);
 				if (file.hasNextInt()) {
 					System.out.println(address);
 					int value = Integer.parseInt(file.nextLine(), 2);
-					m.setData(address, value);
+					if(address == (int)address){
+						m.setData((int)address, value);
+					}
+					else {
+						
+					}
 				}
 
 			}
